@@ -1,0 +1,31 @@
+allprojects {
+    repositories {
+        google()
+        mavenCentral()
+
+    }
+}
+
+rootProject.buildDir = '../build'
+subprojects {
+    project.buildDir = "${rootProject.buildDir}/${project.name}"
+}
+//subprojects {
+//    project.evaluationDependsOn(':app')
+//}
+
+tasks.register("clean", Delete) {
+    delete rootProject.buildDir
+}
+
+subprojects {
+    afterEvaluate { project ->
+        if (project.hasProperty('android')) {
+            project.android {
+                if (!project.hasProperty('namespace')|| project.namespace == null) {
+                    namespace = project.group.toString()
+                }
+            }
+        }
+    }
+}
